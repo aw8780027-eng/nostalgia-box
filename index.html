@@ -1,134 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nostalgia Box TV Dashboard</title>
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #000;
-        border-radius: 0px;
-    }
-
-    body {
-        position: relative;
-        font-family: monospace;
-    }
-
-    #tv {
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        border: 0;
-        border-radius: 0px;
-        background: #000;
-    }
-
-    #channelOverlay {
-        position: fixed;
-        top: 24px;
-        right: 24px;
-        color: #00ff66;
-        font-size: 28px;
-        font-weight: bold;
-        letter-spacing: 2px;
-        text-shadow:
-            0 0 4px #00ff66,
-            0 0 10px #00ff66;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 1000;
-    }
-
-    .show-channel {
-        animation: channelFade 2s forwards;
-    }
-
-    @keyframes channelFade {
-        0% {
-            opacity: 1;
+    <meta charset="UTF-8">
+    <title>Nostalgia Box</title>
+    <style>
+        /* Πλήρης οθόνη με κοφτερές, ίσιες γωνίες (border-radius: 0) */
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: black; overflow: hidden;
         }
-        70% {
-            opacity: 1;
+        #tv-screen {
+            width: 100%; height: 100%; position: absolute;
+            top: 0; left: 0; border-radius: 0px; border: none;
         }
-        100% {
-            opacity: 0;
+        /* Πράσινη ρετρό ένδειξη καναλιού */
+        #channel-display {
+            position: absolute; top: 30px; right: 40px;
+            color: #00ff00; font-family: 'Courier New', monospace;
+            font-size: 40px; font-weight: bold; text-shadow: 0 0 10px #00ff00;
+            opacity: 0; transition: opacity 0.5s ease-in-out; pointer-events: none;
+            z-index: 9999;
         }
-    }
-</style>
+    </style>
 </head>
 <body>
 
-<iframe
-    id="tv"
-    allow="autoplay; fullscreen"
-    allowfullscreen
-></iframe>
+    <!-- Ο Player με τις απαραίτητες ρυθμίσεις ασφαλείας για να μην μπλοκάρει το Mi Box -->
+    <iframe id="tv-screen" src="" allow="autoplay; fullscreen; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div id="channel-display">CH 01</div>
 
-<div id="channelOverlay">CH 1</div>
+    <script>
+        // Διορθωμένα Links (youtube-nocookie) που ΔΕΝ τρώνε μπλοκάρισμα
+        const videos = [
+            "https://youtube-nocookie.com",
+            "https://youtube-nocookie.com",
+            "https://youtube-nocookie.com"
+        ];
 
-<script>
-    // Placeholder YouTube embed URLs
-    const channels = [
-       "https://youtube.com",
-            "https://youtube.com",
-            "https://youtube.com"
-    ];
+        let currentIdx = 0;
+        const screen = document.getElementById('tv-screen');
+        const display = document.getElementById('channel-display');
 
-    const tv = document.getElementById("tv");
-    const overlay = document.getElementById("channelOverlay");
-
-    let currentChannel = 0;
-
-    function loadChannel(index) {
-        currentChannel = index;
-        tv.src = channels[index];
-
-        overlay.textContent = `CH ${index + 1}`;
-
-        overlay.classList.remove("show-channel");
-        void overlay.offsetWidth; // restart animation
-        overlay.classList.add("show-channel");
-    }
-
-    function randomChannel() {
-        if (channels.length <= 1) return;
-
-        let next;
-        do {
-            next = Math.floor(Math.random() * channels.length);
-        } while (next === currentChannel);
-
-        loadChannel(next);
-    }
-
-    document.addEventListener("keydown", (event) => {
-        const key = event.key;
-
-        if (
-            key === "ArrowRight" ||
-            key === "ArrowLeft" ||
-            key === "Enter"
-        ) {
-            randomChannel();
+        function changeChannel() {
+            currentIdx = Math.floor(Math.random() * videos.length);
+            screen.src = videos[currentIdx];
+            
+            display.innerText = "CH " + String(currentIdx + 1).padStart(2, '0');
+            display.style.opacity = "1";
+            setTimeout(() => { display.style.opacity = "0"; }, 2000);
         }
-    });
 
-    // Initial channel
-    loadChannel(0);
-</script>
+        // Αλλαγή καναλιού με το τηλεκοντρόλ του Mi Box (Βέλη ή OK)
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft' || event.key === 'Enter') {
+                changeChannel();
+            }
+        });
+
+        window.onload = changeChannel;
+    </script>
+</body>
+</html>
 
 </body>
 </html>
