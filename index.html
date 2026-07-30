@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Nostalgia Box</title>
     <style>
-        /* Πλήρης οθόνη με κοφτερές, ίσιες γωνίες (border-radius: 0) */
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: black; overflow: hidden;
@@ -13,7 +12,6 @@
             width: 100%; height: 100%; position: absolute;
             top: 0; left: 0; border-radius: 0px; border: none;
         }
-        /* Πράσινη ρετρό ένδειξη καναλιού */
         #channel-display {
             position: absolute; top: 30px; right: 40px;
             color: #00ff00; font-family: 'Courier New', monospace;
@@ -25,40 +23,60 @@
 </head>
 <body>
 
-    <!-- Ο Player με τις απαραίτητες ρυθμίσεις ασφαλείας για να μην μπλοκάρει το Mi Box -->
     <iframe id="tv-screen" src="" allow="autoplay; fullscreen; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     <div id="channel-display">CH 01</div>
 
     <script>
-        // Διορθωμένα Links (youtube-nocookie) που ΔΕΝ τρώνε μπλοκάρισμα
-        const videos = [
-          "https://youtube-nocookie.com",
-            "https://youtube-nocookie.com",
-            "https://youtube-nocookie.com",
-            "https://youtube-nocookie.com"
-        ];
+        // ΕΔΩ ΧΩΡΙΖΕΙΣ ΤΑ ΒΙΝΤΕΟ ΣΟΥ ΣΕ 3 ΚΑΝΑΛΙΑ
+        const channels = {
+            1: [
+                "https://youtube-nocookie.com",
+                "https://youtube-nocookie.com" // Βάλε όσα θες για το Κανάλι 1
+            ],
+            2: [
+                "https://youtube-nocookie.com",
+                "https://youtube-nocookie.com" // Βάλε όσα θες για το Κανάλι 2
+            ],
+            3: [
+                "https://youtube-nocookie.com",
+                "https://youtube-nocookie.com" // Βάλε όσα θες για το Κανάλι 3
+            ]
+        };
 
-        let currentIdx = 0;
+        let currentChannel = 1; // Ξεκινάει από το Κανάλι 1
         const screen = document.getElementById('tv-screen');
         const display = document.getElementById('channel-display');
 
-        function changeChannel() {
-            currentIdx = Math.floor(Math.random() * videos.length);
-            screen.src = videos[currentIdx];
+        function playChannel() {
+            // Παίρνει τη λίστα των βίντεο του συγκεκριμένου καναλιού
+            const currentVideoList = channels[currentChannel];
             
-            display.innerText = "CH " + String(currentIdx + 1).padStart(2, '0');
+            // Επιλέγει ένα βίντεο στην τύχη ΜΕΣΑ από αυτό το κανάλι
+            const randomVideoIdx = Math.floor(Math.random() * currentVideoList.length);
+            
+            // Φορτώνει το τυχαίο βίντεο στην οθόνη
+            screen.src = currentVideoList[randomVideoIdx];
+            
+            // Δείχνει στην οθόνη CH 01, CH 02, CH 03
+            display.innerText = "CH " + String(currentChannel).padStart(2, '0');
             display.style.opacity = "1";
             setTimeout(() => { display.style.opacity = "0"; }, 2000);
         }
 
-        // Αλλαγή καναλιού με το τηλεκοντρόλ του Mi Box (Βέλη ή OK)
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft' || event.key === 'Enter') {
-                changeChannel();
+            if (event.key === 'ArrowRight' || event.key === 'Enter') {
+                // Πάει στο επόμενο κανάλι (1 -> 2 -> 3 -> 1)
+                currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
+                playChannel();
+            } else if (event.key === 'ArrowLeft') {
+                // Πάει στο προηγούμενο κανάλι (3 -> 2 -> 1 -> 3)
+                currentChannel = currentChannel === 1 ? 3 : currentChannel - 1;
+                playChannel();
             }
         });
 
-        window.onload = changeChannel;
+        // Φόρτωση του πρώτου καναλιού με το που ανοίγει
+        window.onload = playChannel;
     </script>
 </body>
 </html>
