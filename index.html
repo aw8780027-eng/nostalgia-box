@@ -15,9 +15,9 @@
         #channel-display {
             position: absolute; top: 30px; right: 40px;
             color: #00ff00; font-family: 'Courier New', monospace;
-            font-size: 40px; font-weight: bold; text-shadow: 0 0 10px #00ff00;
+            font-size: 30px; font-weight: bold; text-shadow: 0 0 10px #00ff00;
             opacity: 0; transition: opacity 0.5s ease-in-out; pointer-events: none;
-            z-index: 9999;
+            z-index: 9999; text-align: right; line-height: 1.4;
         }
     </style>
 </head>
@@ -27,26 +27,23 @@
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΤΑ 3 ΚΑΝΑΛΙΑ ΣΟΥ - ΤΟ ΚΑΝΑΛΙ 1 ΕΧΕΙ ΟΛΕΣ ΤΙΣ ΔΙΑΦΗΜΙΣΕΙΣ VODAFONE LUMIA
+        // ΤΑ 3 ΚΑΝΑΛΙΑ ΣΟΥ ΜΕ ΤΑ ΟΝΟΜΑΤΑ ΤΩΝ ΒΙΝΤΕΟ
         const channels = {
             1: [
-                // ΚΑΝΑΛΙ 1: Vodafone Greece - Microsoft & Nokia Lumia Ads
-                "https://youtube-nocookie.com", // Nokia Lumia 520 Vodafone
-                "https://youtube-nocookie.com", // Nokia Lumia 625 Vodafone
-                "https://youtube-nocookie.com", // Nokia Lumia 925 Ομάδα Ready
-                "https://youtube-nocookie.com", // Microsoft Lumia 535 Vodafone
-                "https://youtube-nocookie.com", // Nokia Lumia 1020 Camera Ad
-                "https://youtube-nocookie.com"  // Vodafone Smart & Lumia Promo
+                { name: "Vodafone - Nokia Lumia 520", url: "https://youtube.com" },
+                { name: "Vodafone - Nokia Lumia 625", url: "https://youtube.com" },
+                { name: "Vodafone Ready - Nokia Lumia 925", url: "https://youtube.com" },
+                { name: "Vodafone - Microsoft Lumia 535", url: "https://youtube.com" },
+                { name: "Vodafone - Nokia Lumia 1020 Camera", url: "https://youtube.com" },
+                { name: "Vodafone Smart & Lumia Promo", url: "https://youtube.com" }
             ],
             2: [
-                // ΚΑΝΑΛΙ 2: Άλλες παλιές ελληνικές διαφημίσεις (80s, 90s, 00s)
-                "https://youtube-nocookie.com", // Μεγάλο Compilation
-                "https://youtube-nocookie.com"  // Ρετρό TV Ads GR
+                { name: "80s & 90s Greek Ads Compilation", url: "https://youtube.com" },
+                { name: "Retro TV Ads Greece", url: "https://youtube.com" }
             ],
             3: [
-                // ΚΑΝΑΛΙ 3: Παλιά Κινούμενα Σχέδια (Cartoons στα ελληνικά)
-                "https://youtube-nocookie.com", // Αστυνόμος Σαΐνης / Thundercats GR
-                "https://youtube-nocookie.com"  // Παλιά κλασικά Looney Tunes
+                { name: "Αστυνόμος Σαΐνης / Thundercats GR", url: "https://youtube.com" },
+                { name: "Classic Looney Tunes Greek", url: "https://youtube.com" }
             ]
         };
 
@@ -56,16 +53,20 @@
 
         function playChannel() {
             const currentVideoList = channels[currentChannel];
-            const randomVideoIdx = Math.floor(Math.random() * currentVideoList.length);
+            const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            screen.src = currentVideoList[randomVideoIdx];
+            // Φόρτωση του βίντεο
+            screen.src = randomVideo.url;
             
-            display.innerText = "CH " + String(currentChannel).padStart(2, '0');
+            // Εμφάνιση Καναλιού και Ονόματος Βίντεο στην οθόνη
+            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
-            setTimeout(() => { display.style.opacity = "0"; }, 2000);
+            
+            // Σβήσιμο της ένδειξης μετά από 3 δευτερόλεπτα
+            setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
-        // Έλεγχος με το τηλεκοντρόλ του Mi Box / Πληκτρολόγιο PC
+        // Έλεγχος με το τηλεκοντρόλ / βέλη πληκτρολογίου
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
@@ -80,6 +81,7 @@
     </script>
 </body>
 </html>
+
 
 
 </body>
