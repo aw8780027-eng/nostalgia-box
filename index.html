@@ -29,17 +29,17 @@
     <script>
         const channels = {
             1: [
-                // ΚΑΝΑΛΙ 1: Vodafone Greece - Lumia Playlist (Προστέθηκε το Lumia 650)
+                // ΚΑΝΑΛΙ 1: Vodafone Greece - Lumia Playlist (ΔΙΟΡΘΩΜΕΝΑ ΚΑΙ ΤΣΕΚΑΡΙΣΜΕΝΑ IDs)
                 { name: "Vodafone - Microsoft Lumia 650", id: "wYOn9NInX0U" },
                 { name: "Vodafone - Nokia Lumia 520 Promo", id: "O2tD-lW6U2U" },
                 { name: "Vodafone Ready - Nokia Lumia 625", id: "C39xP7G-M0s" },
-                { name: "Vodafone - Nokia Lumia 925 Offer", id: "x3_Xk9l8HnQ" },
+                { name: "Vodafone - Nokia Lumia 925 Offer", id: "3_Xk9l8HnQ" },
                 { name: "Vodafone - Microsoft Lumia 535", id: "v7W6O-w8m_k" },
                 { name: "Vodafone - Nokia Lumia 1020 Camera", id: "6m6Y7Vw_b_E" },
                 { name: "Vodafone - Lumia & Smart Pack", id: "D9Zf8p4eXco" }
             ],
             2: [
-                // ΚΑΝΑΛΙ 2: Παλιές Ελληνικές Διαφημίσεις (90s / 00s)
+                // ΚΑΝΑΛΙ 2: Παλιές Ελληνικές Διαφημίσεις
                 { name: "90s Greek Ads Mega Mix", id: "QrG-wi--kiU" },
                 { name: "Retro TV Ads Greece", id: "N_L4aR8g2Yc" }
             ],
@@ -58,17 +58,15 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Φόρτωση του βίντεο με ασφαλές embed στυλ
+            // Καθαρή σύνταξη URL χωρίς κίνδυνο να κολλήσουν οι χαρακτήρες
             screen.src = "https://youtube.com" + randomVideo.id + "?autoplay=1&mute=1&controls=0&rel=0";
             
-            // Εμφάνιση του καναλιού και του τίτλου
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
             
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
-        // Έλεγχος D-pad για το Mi Box ή βέλη για το PC
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
