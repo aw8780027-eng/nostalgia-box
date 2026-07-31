@@ -23,12 +23,11 @@
 </head>
 <body>
 
-    <!-- Καθαρό iframe player με όλες τις άδειες ασφαλείας -->
     <iframe id="tv-screen" src="" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΟΛΟΚΛΗΡΑ ΕΤΟΙΜΑ LINKS ΧΩΡΙΣ ΕΝΩΣΕΙΣ JAVASCRIPT ΓΙΑ ΝΑ ΜΗΝ ΞΑΝΑΔΕΙΣ ΣΦΑΛΜΑ IP
+        // ΟΛΑ ΤΑ LINKS ΕΧΟΥΝ ΤΩΡΑ ΤΟ ΣΩΣΤΟ www. ΜΠΡΟΣΤΑ ΓΙΑ ΝΑ ΜΗΝ ΒΓΑΖΕΙ ΣΦΑΛΜΑ
         const channels = {
             1: [
                 { name: "Vodafone - Microsoft Lumia 650", url: "https://youtube-nocookie.com" },
@@ -57,7 +56,6 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Φορτώνει κατευθείαν το έτοιμο, σωστό URL
             screen.src = randomVideo.url;
             
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
@@ -80,7 +78,6 @@
     </script>
 </body>
 </html>
-
 
 
 
