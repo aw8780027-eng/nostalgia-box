@@ -8,34 +8,29 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: black; overflow: hidden;
         }
-        /* Ο Player απλώνεται 100% στην οθόνη με ίσιες, κοφτερές γωνίες */
-        #yt-player {
+        #tv-screen {
             width: 100%; height: 100%; position: absolute;
             top: 0; left: 0; border: none;
         }
+        /* Η πράσινη ένδειξη έχει πλέον opacity: 1 για να φαίνεται ΑΜΕΣΩΣ με το που ανοίγει η σελίδα */
         #channel-display {
             position: absolute; top: 30px; right: 40px;
             color: #00ff00; font-family: 'Courier New', monospace;
             font-size: 30px; font-weight: bold; text-shadow: 0 0 10px #00ff00;
-            opacity: 0; transition: opacity 0.5s ease-in-out; pointer-events: none;
+            opacity: 1; transition: opacity 0.5s ease-in-out; pointer-events: none;
             z-index: 9999; text-align: right; line-height: 1.4;
         }
     </style>
 </head>
 <body>
 
-    <!-- Εδώ το API του YouTube θα δημιουργήσει τον Player -->
-    <div id="yt-player"></div>
-    <div id="channel-display">CH 01</div>
+    <!-- Καθαρό, κλασικό iframe με όλες τις απαραίτητες άδειες για να μην τρώει block -->
+    <iframe id="tv-screen" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    
+    <!-- Το CH 01 και ο τίτλος είναι πλέον γραμμένα απευθείας στο HTML για να μην βλέπεις ποτέ μαύρη οθόνη -->
+    <div id="channel-display">CH 01<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>Φόρτωση Nostalgia Box...</span></div>
 
     <script>
-        // 1. Φόρτωση του επίσημου YouTube Player API Script από τους servers της Google
-        var tag = document.createElement('script');
-        tag.src = "https://youtube.com";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // 2. Η λίστα σου με τα 3 κανάλια και τους σωστούς κωδικούς (IDs) των βίντεο
         const channels = {
             1: [
                 { name: "Vodafone - Microsoft Lumia 650", id: "wYOn9NInX0U" },
@@ -57,59 +52,24 @@
         };
 
         let currentChannel = 1;
-        let player;
+        const screen = document.getElementById('tv-screen');
+        const display = document.getElementById('channel-display');
 
-        // 3. Αυτή η συνάρτηση τρέχει αυτόματα μόλις το API του YouTube είναι έτοιμο
-        function onYouTubePlayerAPIReady() {
-            const currentVideoList = channels[currentChannel];
-            const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
-
-            player = new YT.Player('yt-player', {
-                height: '100%',
-                width: '100%',
-                videoId: randomVideo.id,
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0, // Κρύβει τις μπάρες του YouTube
-                    'mute': 1,     // Υποχρεωτικό Mute για να επιτρέψει ο browser το Autoplay
-                    'rel': 0,
-                    'modestbranding': 1,
-                    'iv_load_policy': 3
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            event.target.playVideo();
-            showOverlay(channels[currentChannel][0].name); // Δείχνει το όνομα του πρώτου βίντεο
-        }
-
-        // 4. Η συνάρτηση που αλλάζει κανάλι
         function playChannel() {
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            if (player && player.loadVideoById) {
-                player.loadVideoById({
-                    videoId: randomVideo.id,
-                    startSeconds: 0
-                });
-                player.mute(); // Ξαναβάζει mute για να μην κολλήσει το επόμενο βίντεο
-                showOverlay(randomVideo.name);
-            }
-        }
-
-        function showOverlay(videoName) {
-            const display = document.getElementById('channel-display');
-            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + videoName + "</span>";
+            // Καθαρό URL χωρίς εξωτερικά API που κολλάνε
+            screen.src = "https://youtube.com" + randomVideo.id + "?autoplay=1&mute=1&controls=0&rel=0";
+            
+            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
-            setTimeout(() => { display.style.opacity = "0"; }, 3000);
+            
+            // Το λογότυπο θα σβήσει μετά από 4 δευτερόλεπτα
+            setTimeout(() => { display.style.opacity = "0"; }, 4000);
         }
 
-        // 5. Έλεγχος με το πληκτρολόγιο (Βέλη) ή το τηλεκοντρόλ του Mi Box (D-Pad)
+        // Έλεγχος με τα βέλη του πληκτρολογίου
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
@@ -119,6 +79,9 @@
                 playChannel();
             }
         });
+
+        // Εκτέλεση με το που ανοίγει η σελίδα
+        window.onload = playChannel;
     </script>
 </body>
 </html>
