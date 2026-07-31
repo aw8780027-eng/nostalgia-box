@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <title>Nostalgia Box</title>
+    <title>Greek Nostalgia Box</title>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -27,59 +27,60 @@
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΕΔΩ ΧΩΡΙΖΕΙΣ ΤΑ ΒΙΝΤΕΟ ΣΟΥ ΣΕ 3 ΚΑΝΑΛΙΑ
+        // ΤΑ 3 ΚΑΝΑΛΙΑ ΣΟΥ - ΤΟ ΚΑΝΑΛΙ 1 ΕΧΕΙ ΟΛΕΣ ΤΙΣ ΔΙΑΦΗΜΙΣΕΙΣ VODAFONE LUMIA
         const channels = {
             1: [
-                "https://youtube-nocookie.com",
-                "https://youtube-nocookie.com" // Βάλε όσα θες για το Κανάλι 1
+                // ΚΑΝΑΛΙ 1: Vodafone Greece - Microsoft & Nokia Lumia Ads
+                "https://youtube-nocookie.com", // Nokia Lumia 520 Vodafone
+                "https://youtube-nocookie.com", // Nokia Lumia 625 Vodafone
+                "https://youtube-nocookie.com", // Nokia Lumia 925 Ομάδα Ready
+                "https://youtube-nocookie.com", // Microsoft Lumia 535 Vodafone
+                "https://youtube-nocookie.com", // Nokia Lumia 1020 Camera Ad
+                "https://youtube-nocookie.com"  // Vodafone Smart & Lumia Promo
             ],
             2: [
-                "https://youtube-nocookie.com",
-                "https://youtube-nocookie.com" // Βάλε όσα θες για το Κανάλι 2
+                // ΚΑΝΑΛΙ 2: Άλλες παλιές ελληνικές διαφημίσεις (80s, 90s, 00s)
+                "https://youtube-nocookie.com", // Μεγάλο Compilation
+                "https://youtube-nocookie.com"  // Ρετρό TV Ads GR
             ],
             3: [
-                "https://youtube-nocookie.com",
-                "https://youtube-nocookie.com" // Βάλε όσα θες για το Κανάλι 3
+                // ΚΑΝΑΛΙ 3: Παλιά Κινούμενα Σχέδια (Cartoons στα ελληνικά)
+                "https://youtube-nocookie.com", // Αστυνόμος Σαΐνης / Thundercats GR
+                "https://youtube-nocookie.com"  // Παλιά κλασικά Looney Tunes
             ]
         };
 
-        let currentChannel = 1; // Ξεκινάει από το Κανάλι 1
+        let currentChannel = 1;
         const screen = document.getElementById('tv-screen');
         const display = document.getElementById('channel-display');
 
         function playChannel() {
-            // Παίρνει τη λίστα των βίντεο του συγκεκριμένου καναλιού
             const currentVideoList = channels[currentChannel];
-            
-            // Επιλέγει ένα βίντεο στην τύχη ΜΕΣΑ από αυτό το κανάλι
             const randomVideoIdx = Math.floor(Math.random() * currentVideoList.length);
             
-            // Φορτώνει το τυχαίο βίντεο στην οθόνη
             screen.src = currentVideoList[randomVideoIdx];
             
-            // Δείχνει στην οθόνη CH 01, CH 02, CH 03
             display.innerText = "CH " + String(currentChannel).padStart(2, '0');
             display.style.opacity = "1";
             setTimeout(() => { display.style.opacity = "0"; }, 2000);
         }
 
+        // Έλεγχος με το τηλεκοντρόλ του Mi Box / Πληκτρολόγιο PC
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
-                // Πάει στο επόμενο κανάλι (1 -> 2 -> 3 -> 1)
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
                 playChannel();
             } else if (event.key === 'ArrowLeft') {
-                // Πάει στο προηγούμενο κανάλι (3 -> 2 -> 1 -> 3)
                 currentChannel = currentChannel === 1 ? 3 : currentChannel - 1;
                 playChannel();
             }
         });
 
-        // Φόρτωση του πρώτου καναλιού με το που ανοίγει
         window.onload = playChannel;
     </script>
 </body>
 </html>
+
 
 </body>
 </html>
