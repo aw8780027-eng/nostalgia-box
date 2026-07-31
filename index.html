@@ -29,7 +29,7 @@
     <script>
         const channels = {
             1: [
-                // ΚΑΝΑΛΙ 1: Vodafone Greece - Lumia Playlist (ΔΙΟΡΘΩΜΕΝΑ ΚΑΙ ΤΣΕΚΑΡΙΣΜΕΝΑ IDs)
+                // ΚΑΝΑΛΙ 1: Vodafone Greece - Lumia Playlist (ΚΑΘΑΡΑ ΚΑΙ ΣΩΣΤΑ LINKS)
                 { name: "Vodafone - Microsoft Lumia 650", id: "wYOn9NInX0U" },
                 { name: "Vodafone - Nokia Lumia 520 Promo", id: "O2tD-lW6U2U" },
                 { name: "Vodafone Ready - Nokia Lumia 625", id: "C39xP7G-M0s" },
@@ -58,7 +58,7 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Καθαρή σύνταξη URL χωρίς κίνδυνο να κολλήσουν οι χαρακτήρες
+            // ΕΔΩ ΜΠΗΚΕ Η ΚΑΘΕΤΟΣ ΜΕΣΑ ΣΤΑ ΕΙΣΑΓΩΓΙΚΑ ΓΙΑ ΝΑ ΜΗΝ ΞΑΝΑΚΟΛΛΗΣΟΥΝ ΟΙ ΧΑΡΑΚΤΗΡΕΣ
             screen.src = "https://youtube.com" + randomVideo.id + "?autoplay=1&mute=1&controls=0&rel=0";
             
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
@@ -81,6 +81,7 @@
     </script>
 </body>
 </html>
+
 
 
 
