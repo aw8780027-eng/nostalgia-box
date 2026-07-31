@@ -23,11 +23,11 @@
 </head>
 <body>
 
-    <!-- Χρησιμοποιούμε ξανά το iframe αλλά με τις σωστές ρυθμίσεις autoplay/mute που ξεκλειδώνουν την οθόνη -->
     <iframe id="tv-screen" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     <div id="channel-display">CH 01</div>
 
     <script>
+        // ΔΙΟΡΘΩΜΕΝΑ LINKS ΜΕ ΤΗ ΣΩΣΤΗ ΚΑΘΕΤΟ /embed/
         const channels = {
             1: [
                 { name: "Vodafone - Nokia Lumia 520", id: "S2p9z6F8Z88" },
@@ -55,8 +55,8 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Το μυστικό είναι το &mute=1 και το &autoplay=1 μαζί, ώστε ο browser να επιτρέψει στο βίντεο να παίξει αμέσως
-            screen.src = "https://youtube.com" + randomVideo.id + "?autoplay=1&mute=1&controls=0&loop=1&playlist=" + randomVideo.id;
+            // Εδώ μπήκε η σωστή διεύθυνση www.youtube.com/embed/ μαζί με τις εντολές autoplay και mute
+            screen.src = "https://www.youtube.com/embed/" + randomVideo.id + "?autoplay=1&mute=1&controls=0&rel=0";
             
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
@@ -64,6 +64,7 @@
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
+        // Αλλαγή καναλιών με D-pad τηλεκοντρόλ ή βέλη PC
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
