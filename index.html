@@ -27,7 +27,7 @@
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΤΑ 3 ΚΑΝΑΛΙΑ ΣΟΥ ΜΕ ΤΑ ΟΝΟΜΑΤΑ ΤΩΝ ΒΙΝΤΕΟ
+        // ΑΛΛΑΓΗ ΑΠΟ /embed/ ΣΕ /v/ ΓΙΑ ΝΑ ΜΗΝ ΑΡΝΕΙΤΑΙ ΤΗ ΣΥΝΔΕΣΗ ΤΟ YOUTUBE
         const channels = {
             1: [
                 { name: "Vodafone - Nokia Lumia 520", url: "https://youtube.com" },
@@ -55,18 +55,14 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Φόρτωση του βίντεο
             screen.src = randomVideo.url;
             
-            // Εμφάνιση Καναλιού και Ονόματος Βίντεο στην οθόνη
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
             
-            // Σβήσιμο της ένδειξης μετά από 3 δευτερόλεπτα
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
-        // Έλεγχος με το τηλεκοντρόλ / βέλη πληκτρολογίου
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
@@ -81,6 +77,7 @@
     </script>
 </body>
 </html>
+
 
 
 
