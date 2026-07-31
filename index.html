@@ -27,21 +27,24 @@
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΔΙΟΡΘΩΜΕΝΑ LINKS ΜΕ ΤΗ ΣΩΣΤΗ ΚΑΘΕΤΟ /embed/
         const channels = {
             1: [
-                { name: "Vodafone - Nokia Lumia 520", id: "S2p9z6F8Z88" },
-                { name: "Vodafone - Nokia Lumia 625", id: "Lw9pInuG2Ew" },
-                { name: "Vodafone Ready - Nokia Lumia 925", id: "bL7X_RzG6g4" },
-                { name: "Vodafone - Microsoft Lumia 535", id: "w7W6O-w8m_k" },
-                { name: "Vodafone - Nokia Lumia 1020", id: "6m6Y7Vw_b_E" },
-                { name: "Vodafone Smart & Lumia Promo", id: "3_Xk9l8HnQo" }
+                // ΚΑΝΑΛΙ 1: Vodafone Greece - Lumia Playlist (Προστέθηκε το Lumia 650)
+                { name: "Vodafone - Microsoft Lumia 650", id: "wYOn9NInX0U" },
+                { name: "Vodafone - Nokia Lumia 520 Promo", id: "O2tD-lW6U2U" },
+                { name: "Vodafone Ready - Nokia Lumia 625", id: "C39xP7G-M0s" },
+                { name: "Vodafone - Nokia Lumia 925 Offer", id: "x3_Xk9l8HnQ" },
+                { name: "Vodafone - Microsoft Lumia 535", id: "v7W6O-w8m_k" },
+                { name: "Vodafone - Nokia Lumia 1020 Camera", id: "6m6Y7Vw_b_E" },
+                { name: "Vodafone - Lumia & Smart Pack", id: "D9Zf8p4eXco" }
             ],
             2: [
-                { name: "80s & 90s Greek Ads Compilation", id: "5F_Sg_82G9A" },
+                // ΚΑΝΑΛΙ 2: Παλιές Ελληνικές Διαφημίσεις (90s / 00s)
+                { name: "90s Greek Ads Mega Mix", id: "QrG-wi--kiU" },
                 { name: "Retro TV Ads Greece", id: "N_L4aR8g2Yc" }
             ],
             3: [
+                // ΚΑΝΑΛΙ 3: Παλιά Κινούμενα Σχέδια στα Ελληνικά
                 { name: "Αστυνόμος Σαΐνης / Thundercats GR", id: "J7cR_z1EfgA" },
                 { name: "Classic Looney Tunes Greek", id: "wX4_8Jp8xM0" }
             ]
@@ -55,16 +58,17 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Εδώ μπήκε η σωστή διεύθυνση www.youtube.com/embed/ μαζί με τις εντολές autoplay και mute
-            screen.src = "https://www.youtube.com/embed/" + randomVideo.id + "?autoplay=1&mute=1&controls=0&rel=0";
+            // Φόρτωση του βίντεο με ασφαλές embed στυλ
+            screen.src = "https://youtube.com" + randomVideo.id + "?autoplay=1&mute=1&controls=0&rel=0";
             
+            // Εμφάνιση του καναλιού και του τίτλου
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
             
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
-        // Αλλαγή καναλιών με D-pad τηλεκοντρόλ ή βέλη PC
+        // Έλεγχος D-pad για το Mi Box ή βέλη για το PC
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
