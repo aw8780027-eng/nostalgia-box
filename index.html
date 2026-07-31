@@ -8,7 +8,8 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: black; overflow: hidden;
         }
-        #tv-screen {
+        /* Ο Player απλώνεται σε όλη την οθόνη με κοφτερές γωνίες */
+        #yt-player {
             width: 100%; height: 100%; position: absolute;
             top: 0; left: 0; border-radius: 0px; border: none;
         }
@@ -23,46 +24,87 @@
 </head>
 <body>
 
-    <iframe id="tv-screen" src="" allow="autoplay; fullscreen; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <!-- Εδώ το API θα δημιουργήσει τον επίσημο Player του YouTube -->
+    <div id="yt-player"></div>
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΑΛΛΑΓΗ ΑΠΟ /embed/ ΣΕ /v/ ΓΙΑ ΝΑ ΜΗΝ ΑΡΝΕΙΤΑΙ ΤΗ ΣΥΝΔΕΣΗ ΤΟ YOUTUBE
+        // Φόρτωση του επίσημου YouTube API script
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/player_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // ΤΑ ΚΑΝΑΛΙΑ ΣΟΥ ΜΕ ΤΟΥΣ ΚΑΘΑΡΟΥΣ ΚΩΔΙΚΟΥΣ (IDs) ΤΩΝ ΒΙΝΤΕΟ
         const channels = {
             1: [
-                { name: "Vodafone - Nokia Lumia 520", url: "https://youtube.com" },
-                { name: "Vodafone - Nokia Lumia 625", url: "https://youtube.com" },
-                { name: "Vodafone Ready - Nokia Lumia 925", url: "https://youtube.com" },
-                { name: "Vodafone - Microsoft Lumia 535", url: "https://youtube.com" },
-                { name: "Vodafone - Nokia Lumia 1020 Camera", url: "https://youtube.com" },
-                { name: "Vodafone Smart & Lumia Promo", url: "https://youtube.com" }
+                { name: "Vodafone - Nokia Lumia 520", id: "S2p9z6F8Z88" },
+                { name: "Vodafone - Nokia Lumia 625", id: "Lw9pInuG2Ew" },
+                { name: "Vodafone Ready - Nokia Lumia 925", id: "bL7X_RzG6g4" },
+                { name: "Vodafone - Microsoft Lumia 535", id: "w7W6O-w8m_k" },
+                { name: "Vodafone - Nokia Lumia 1020", id: "6m6Y7Vw_b_E" },
+                { name: "Vodafone Smart & Lumia Promo", id: "3_Xk9l8HnQo" }
             ],
             2: [
-                { name: "80s & 90s Greek Ads Compilation", url: "https://youtube.com" },
-                { name: "Retro TV Ads Greece", url: "https://youtube.com" }
+                { name: "80s & 90s Greek Ads Compilation", id: "5F_Sg_82G9A" },
+                { name: "Retro TV Ads Greece", id: "N_L4aR8g2Yc" }
             ],
             3: [
-                { name: "Αστυνόμος Σαΐνης / Thundercats GR", url: "https://youtube.com" },
-                { name: "Classic Looney Tunes Greek", url: "https://youtube.com" }
+                { name: "Αστυνόμος Σαΐνης / Thundercats GR", id: "J7cR_z1EfgA" },
+                { name: "Classic Looney Tunes Greek", id: "wX4_8Jp8xM0" }
             ]
         };
 
         let currentChannel = 1;
-        const screen = document.getElementById('tv-screen');
-        const display = document.getElementById('channel-display');
+        let player;
+
+        // Αυτή η συνάρτηση τρέχει αυτόματα μόλις φορτώσει το API του YouTube
+        function onYouTubePlayerAPIReady() {
+            const currentVideoList = channels[currentChannel];
+            const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
+
+            player = new YT.Player('yt-player', {
+                height: '100%',
+                width: '100%',
+                videoId: randomVideo.id,
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'mute': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            showOverlay(channels[currentChannel][0].name); // Δείχνει το όνομα του πρώτου βίντεο
+        }
 
         function playChannel() {
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            screen.src = randomVideo.url;
-            
-            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
+            if (player && player.loadVideoById) {
+                player.loadVideoById({ videoId: randomVideo.id });
+                player.mute(); // Σιγουρεύει ότι θα παίξει αυτόματα (Autoplay)
+                showOverlay(randomVideo.name);
+            }
+        }
+
+        function showOverlay(videoName) {
+            const display = document.getElementById('channel-display');
+            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + videoName + "</span>";
             display.style.opacity = "1";
-            
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
+        // Έλεγχος με το τηλεκοντρόλ / βέλη πληκτρολογίου
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
@@ -72,8 +114,6 @@
                 playChannel();
             }
         });
-
-        window.onload = playChannel;
     </script>
 </body>
 </html>
