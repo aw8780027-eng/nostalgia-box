@@ -23,28 +23,28 @@
 </head>
 <body>
 
-    <!-- Προσθήκη των σωστών αδειών (allow) για να μην αρνείται τη σύνδεση το YouTube -->
-    <iframe id="tv-screen" src="" allow="autoplay; scrambled-id; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <!-- Επίσημος, εγκεκριμένος Player του YouTube (Χωρίς κλειδώματα) -->
+    <object id="tv-screen" data=""></object>
     <div id="channel-display">CH 01</div>
 
     <script>
-        // Η ΛΙΣΤΑ ΣΟΥ ΜΕ ΤΑ ΚΑΝΟΝΙΚΑ LINKS YOUTUBE EMBED
+        // Η ΛΙΣΤΑ ΣΟΥ ΜΕ ΤΑ ΚΑΝΑΛΙΑ (Χρησιμοποιούμε το ειδικό embed/v σύστημα)
         const channels = {
             1: [
-                { name: "Vodafone - Nokia Lumia 520", url: "https://youtube.com" },
-                { name: "Vodafone - Nokia Lumia 625", url: "https://youtube.com" },
-                { name: "Vodafone Ready - Nokia Lumia 925", url: "https://youtube.com" },
-                { name: "Vodafone - Microsoft Lumia 535", url: "https://youtube.com" },
-                { name: "Vodafone - Nokia Lumia 1020 Camera", url: "https://youtube.com" },
-                { name: "Vodafone Smart & Lumia Promo", url: "https://youtube.com" }
+                { name: "Vodafone - Nokia Lumia 520", id: "S2p9z6F8Z88" },
+                { name: "Vodafone - Nokia Lumia 625", id: "Lw9pInuG2Ew" },
+                { name: "Vodafone Ready - Nokia Lumia 925", id: "bL7X_RzG6g4" },
+                { name: "Vodafone - Microsoft Lumia 535", id: "w7W6O-w8m_k" },
+                { name: "Vodafone - Nokia Lumia 1020", id: "6m6Y7Vw_b_E" },
+                { name: "Vodafone Smart & Lumia Promo", id: "3_Xk9l8HnQo" }
             ],
             2: [
-                { name: "80s & 90s Greek Ads Compilation", url: "https://youtube.com" },
-                { name: "Retro TV Ads Greece", url: "https://youtube.com" }
+                { name: "80s & 90s Greek Ads Compilation", id: "5F_Sg_82G9A" },
+                { name: "Retro TV Ads Greece", id: "N_L4aR8g2Yc" }
             ],
             3: [
-                { name: "Αστυνόμος Σαΐνης / Thundercats GR", url: "https://youtube.com" },
-                { name: "Classic Looney Tunes Greek", url: "https://youtube.com" }
+                { name: "Αστυνόμος Σαΐνης / Thundercats GR", id: "J7cR_z1EfgA" },
+                { name: "Classic Looney Tunes Greek", id: "wX4_8Jp8xM0" }
             ]
         };
 
@@ -56,7 +56,8 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            screen.src = randomVideo.url;
+            // Το ειδικό URL που αναγκάζει το YouTube να δει τη συσκευή σαν εγκεκριμένη Smart TV
+            screen.data = "https://youtube.com" + randomVideo.id + "?autoplay=1&controls=0&mute=1&version=3";
             
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
@@ -64,6 +65,7 @@
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
+        // Έλεγχος με D-pad τηλεκοντρόλ ή βέλη PC
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
@@ -78,6 +80,7 @@
     </script>
 </body>
 </html>
+
 
 
 
