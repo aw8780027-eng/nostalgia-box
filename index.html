@@ -23,20 +23,29 @@
 </head>
 <body>
 
-    <iframe id="tv-screen" src="" allowfullscreen="true" scrolling="no"></iframe>
+    <!-- Καθαρό iframe player με όλες τις άδειες ασφαλείας -->
+    <iframe id="tv-screen" src="" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΧΡΗΣΗ TWITCH LIVE ΣΤΡΙΜΣ ΠΟΥ ΕΠΙΤΡΕΠΟΥΝ ΤΟ EMBEDDING ΧΩΡΙΣ ΜΠΛΟΚΑΡΙΣΜΑΤΑ
+        // ΟΛΟΚΛΗΡΑ ΕΤΟΙΜΑ LINKS ΧΩΡΙΣ ΕΝΩΣΕΙΣ JAVASCRIPT ΓΙΑ ΝΑ ΜΗΝ ΞΑΝΑΔΕΙΣ ΣΦΑΛΜΑ IP
         const channels = {
             1: [
-                { name: "Retro Tech & Lumia Stream", username: "retro_gaming_tv" }
+                { name: "Vodafone - Microsoft Lumia 650", url: "https://youtube-nocookie.com" },
+                { name: "Vodafone - Nokia Lumia 520 Promo", url: "https://youtube-nocookie.com" },
+                { name: "Vodafone Ready - Nokia Lumia 625", url: "https://youtube-nocookie.com" },
+                { name: "Vodafone - Nokia Lumia 925 Offer", url: "https://youtube-nocookie.com" },
+                { name: "Vodafone - Microsoft Lumia 535", url: "https://youtube-nocookie.com" },
+                { name: "Vodafone - Nokia Lumia 1020 Camera", url: "https://youtube-nocookie.com" },
+                { name: "Vodafone - Lumia & Smart Pack", url: "https://youtube-nocookie.com" }
             ],
             2: [
-                { name: "Classic 80s-90s TV Ads", username: "vintage_commercials" }
+                { name: "90s Greek Ads Mega Mix", url: "https://youtube-nocookie.com" },
+                { name: "Retro TV Ads Greece", url: "https://youtube-nocookie.com" }
             ],
             3: [
-                { name: "Retro Cartoons 24/7", username: "classic_cartoons_tv" }
+                { name: "Αστυνόμος Σαΐνης / Thundercats GR", url: "https://youtube-nocookie.com" },
+                { name: "Classic Looney Tunes Greek", url: "https://youtube-nocookie.com" }
             ]
         };
 
@@ -48,8 +57,8 @@
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            // Το επίσημο embed του Twitch που δέχεται το GitHub Pages ως parent domain
-            screen.src = "https://twitch.tv" + randomVideo.username + "&parent=aw8780027-eng.github.io&muted=true&autoplay=true";
+            // Φορτώνει κατευθείαν το έτοιμο, σωστό URL
+            screen.src = randomVideo.url;
             
             display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
             display.style.opacity = "1";
@@ -71,8 +80,6 @@
     </script>
 </body>
 </html>
-
-
 
 
 
