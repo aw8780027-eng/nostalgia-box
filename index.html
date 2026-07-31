@@ -8,7 +8,8 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: black; overflow: hidden;
         }
-        #tv-screen {
+        /* Ο Player απλώνεται 100% στην οθόνη με ίσιες, κοφτερές γωνίες */
+        #yt-player {
             width: 100%; height: 100%; position: absolute;
             top: 0; left: 0; border: none;
         }
@@ -23,47 +24,92 @@
 </head>
 <body>
 
-    <iframe id="tv-screen" src="" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <!-- Εδώ το API του YouTube θα δημιουργήσει τον Player -->
+    <div id="yt-player"></div>
     <div id="channel-display">CH 01</div>
 
     <script>
-        // ΟΛΑ ΤΑ LINKS ΕΧΟΥΝ ΤΩΡΑ ΤΟ ΣΩΣΤΟ www. ΜΠΡΟΣΤΑ ΓΙΑ ΝΑ ΜΗΝ ΒΓΑΖΕΙ ΣΦΑΛΜΑ
+        // 1. Φόρτωση του επίσημου YouTube Player API Script από τους servers της Google
+        var tag = document.createElement('script');
+        tag.src = "https://youtube.com";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // 2. Η λίστα σου με τα 3 κανάλια και τους σωστούς κωδικούς (IDs) των βίντεο
         const channels = {
             1: [
-                { name: "Vodafone - Microsoft Lumia 650", url: "https://youtube-nocookie.com" },
-                { name: "Vodafone - Nokia Lumia 520 Promo", url: "https://youtube-nocookie.com" },
-                { name: "Vodafone Ready - Nokia Lumia 625", url: "https://youtube-nocookie.com" },
-                { name: "Vodafone - Nokia Lumia 925 Offer", url: "https://youtube-nocookie.com" },
-                { name: "Vodafone - Microsoft Lumia 535", url: "https://youtube-nocookie.com" },
-                { name: "Vodafone - Nokia Lumia 1020 Camera", url: "https://youtube-nocookie.com" },
-                { name: "Vodafone - Lumia & Smart Pack", url: "https://youtube-nocookie.com" }
+                { name: "Vodafone - Microsoft Lumia 650", id: "wYOn9NInX0U" },
+                { name: "Vodafone - Nokia Lumia 520 Promo", id: "O2tD-lW6U2U" },
+                { name: "Vodafone Ready - Nokia Lumia 625", id: "C39xP7G-M0s" },
+                { name: "Vodafone - Nokia Lumia 925 Offer", id: "3_Xk9l8HnQ" },
+                { name: "Vodafone - Microsoft Lumia 535", id: "v7W6O-w8m_k" },
+                { name: "Vodafone - Nokia Lumia 1020", id: "6m6Y7Vw_b_E" },
+                { name: "Vodafone - Lumia & Smart Pack", id: "D9Zf8p4eXco" }
             ],
             2: [
-                { name: "90s Greek Ads Mega Mix", url: "https://youtube-nocookie.com" },
-                { name: "Retro TV Ads Greece", url: "https://youtube-nocookie.com" }
+                { name: "90s Greek Ads Mega Mix", id: "QrG-wi--kiU" },
+                { name: "Retro TV Ads Greece", id: "N_L4aR8g2Yc" }
             ],
             3: [
-                { name: "Αστυνόμος Σαΐνης / Thundercats GR", url: "https://youtube-nocookie.com" },
-                { name: "Classic Looney Tunes Greek", url: "https://youtube-nocookie.com" }
+                { name: "Αστυνόμος Σαΐνης / Thundercats GR", id: "J7cR_z1EfgA" },
+                { name: "Classic Looney Tunes Greek", id: "wX4_8Jp8xM0" }
             ]
         };
 
         let currentChannel = 1;
-        const screen = document.getElementById('tv-screen');
-        const display = document.getElementById('channel-display');
+        let player;
 
+        // 3. Αυτή η συνάρτηση τρέχει αυτόματα μόλις το API του YouTube είναι έτοιμο
+        function onYouTubePlayerAPIReady() {
+            const currentVideoList = channels[currentChannel];
+            const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
+
+            player = new YT.Player('yt-player', {
+                height: '100%',
+                width: '100%',
+                videoId: randomVideo.id,
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0, // Κρύβει τις μπάρες του YouTube
+                    'mute': 1,     // Υποχρεωτικό Mute για να επιτρέψει ο browser το Autoplay
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            showOverlay(channels[currentChannel][0].name); // Δείχνει το όνομα του πρώτου βίντεο
+        }
+
+        // 4. Η συνάρτηση που αλλάζει κανάλι
         function playChannel() {
             const currentVideoList = channels[currentChannel];
             const randomVideo = currentVideoList[Math.floor(Math.random() * currentVideoList.length)];
             
-            screen.src = randomVideo.url;
-            
-            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + randomVideo.name + "</span>";
+            if (player && player.loadVideoById) {
+                player.loadVideoById({
+                    videoId: randomVideo.id,
+                    startSeconds: 0
+                });
+                player.mute(); // Ξαναβάζει mute για να μην κολλήσει το επόμενο βίντεο
+                showOverlay(randomVideo.name);
+            }
+        }
+
+        function showOverlay(videoName) {
+            const display = document.getElementById('channel-display');
+            display.innerHTML = "CH 0" + currentChannel + "<br><span style='font-size:18px; color:#ffffff; text-shadow:none;'>" + videoName + "</span>";
             display.style.opacity = "1";
-            
             setTimeout(() => { display.style.opacity = "0"; }, 3000);
         }
 
+        // 5. Έλεγχος με το πληκτρολόγιο (Βέλη) ή το τηλεκοντρόλ του Mi Box (D-Pad)
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'Enter') {
                 currentChannel = currentChannel === 3 ? 1 : currentChannel + 1;
@@ -73,11 +119,10 @@
                 playChannel();
             }
         });
-
-        window.onload = playChannel;
     </script>
 </body>
 </html>
+
 
 
 
